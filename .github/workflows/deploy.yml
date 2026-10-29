@@ -29,6 +29,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
+          VITE_CONTACT_BACKEND: ${{ vars.CONTACT_BACKEND }}
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
           VITE_FORMSPREE_ID: ${{ vars.FORMSPREE_ID }}
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3

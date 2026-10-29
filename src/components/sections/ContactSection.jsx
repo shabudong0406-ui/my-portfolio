@@ -5,6 +5,7 @@ import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { sendContact } from '../../lib/contact';
 
 // 연락처·SNS 값은 임시 자리표시자. 실제 정보로 교체해서 사용한다.
 const contacts = [
@@ -18,8 +19,6 @@ const socials = [
   { icon: <InstagramIcon />, label: 'Instagram', href: 'https://www.instagram.com/' },
 ];
 
-// Formspree 폼 ID(빌드 시 VITE_FORMSPREE_ID). 없으면 메일 앱(mailto)으로 대체한다.
-const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID;
 const MAIL_TO = contacts[0].label;
 
 // 무채색(검정/흰색/회색)만 사용하는 심플한 컨택트 섹션
@@ -30,26 +29,13 @@ export default function ContactSection() {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-
-    if (!FORMSPREE_ID) {
-      const subject = encodeURIComponent(`[포트폴리오] ${data.get('name')}님의 문의`);
-      const body = encodeURIComponent(`${data.get('message')}
-
-보낸 사람: ${data.get('name')} (${data.get('email')})`);
-      window.location.href = `mailto:${MAIL_TO}?subject=${subject}&body=${body}`;
-      return;
-    }
+    const fields = { name: data.get('name'), email: data.get('email'), message: data.get('message') };
 
     setStatus('sending');
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-      setStatus('sent');
-      form.reset();
+      const sent = await sendContact(fields, MAIL_TO);
+      setStatus(sent ? 'sent' : 'idle');
+      if (sent) form.reset();
     } catch {
       setStatus('error');
     }
