@@ -1,4 +1,5 @@
-import { Card, CardContent, Typography, Stack, IconButton, Button, TextField, Divider } from '@mui/material';
+import { useState } from 'react';
+import { Card, CardContent, Typography, Stack, IconButton, Button, TextField, Divider, Alert } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -17,8 +18,43 @@ const socials = [
   { icon: <InstagramIcon />, label: 'Instagram', href: 'https://www.instagram.com/' },
 ];
 
+// Formspree 폼 ID(빌드 시 VITE_FORMSPREE_ID). 없으면 메일 앱(mailto)으로 대체한다.
+const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID;
+const MAIL_TO = contacts[0].label;
+
 // 무채색(검정/흰색/회색)만 사용하는 심플한 컨택트 섹션
 export default function ContactSection() {
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    if (!FORMSPREE_ID) {
+      const subject = encodeURIComponent(`[포트폴리오] ${data.get('name')}님의 문의`);
+      const body = encodeURIComponent(`${data.get('message')}
+
+보낸 사람: ${data.get('name')} (${data.get('email')})`);
+      window.location.href = `mailto:${MAIL_TO}?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    setStatus('sending');
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      setStatus('sent');
+      form.reset();
+    } catch {
+      setStatus('error');
+    }
+  };
+
   return (
     <Card id="contact" component="section" sx={{ bgcolor: 'var(--color-bg-primary)' }}>
       <CardContent sx={{ py: { xs: 5, md: 8 }, px: { xs: 2, md: 6 } }}>
@@ -80,13 +116,15 @@ export default function ContactSection() {
             ))}
           </Stack>
 
-          <Stack component="form" spacing={2} sx={{ width: '100%' }} onSubmit={(e) => e.preventDefault()}>
-            <TextField label="이름" size="small" fullWidth />
-            <TextField label="이메일" type="email" size="small" fullWidth />
-            <TextField label="메시지" multiline minRows={4} fullWidth />
-            <Button type="submit" variant="contained" size="large">
-              보내기
+          <Stack component="form" spacing={2} sx={{ width: '100%' }} onSubmit={handleSubmit}>
+            <TextField name="name" label="이름" size="small" required fullWidth />
+            <TextField name="email" label="이메일" type="email" size="small" required fullWidth />
+            <TextField name="message" label="메시지" multiline minRows={4} required fullWidth />
+            <Button type="submit" variant="contained" size="large" disabled={status === 'sending'}>
+              {status === 'sending' ? '보내는 중...' : '보내기'}
             </Button>
+            {status === 'sent' && <Alert severity="success">메시지가 전송되었습니다.</Alert>}
+            {status === 'error' && <Alert severity="error">전송에 실패했습니다. 잠시 후 다시 시도해주세요.</Alert>}
           </Stack>
         </Stack>
       </CardContent>
