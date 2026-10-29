@@ -9,7 +9,7 @@ import { sendContact } from '../../lib/contact';
 
 // 연락처·SNS 값은 임시 자리표시자. 실제 정보로 교체해서 사용한다.
 const contacts = [
-  { icon: <EmailOutlinedIcon />, label: 'jini0406@daum.com', href: 'mailto:jini0406@daum.com' },
+  { icon: <EmailOutlinedIcon />, label: 'jini0406@daum.net', href: 'mailto:jini0406@daum.net' },
   { icon: <PhoneOutlinedIcon />, label: '010-0000-0000', href: 'tel:01000000000' },
 ];
 
