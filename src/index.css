@@ -1,0 +1,59 @@
+:root {
+  /* Primary Colors */
+  --color-primary: #DA3832;
+  --color-primary-light: #E8625D;
+  --color-primary-dark: #D71D24;
+
+  /* Secondary Colors */
+  --color-secondary: #333333;
+  --color-accent: #3868FF;
+
+  /* Background Colors */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F7F7F7;
+
+  /* Text Colors */
+  --color-text-primary: #111111;
+  --color-text-secondary: #555555;
+  --color-text-muted: #999999;
+
+  /* Interactive Colors */
+  --color-button-primary: #333333;
+  --color-button-hover: #CECECE;
+  --color-link: #3A8AFD;
+  --color-link-hover: #3868FF;
+
+  /* Border */
+  --color-border: #DADADA;
+  --color-border-strong: #555555;
+
+  /* Glass (오버레이 패널) */
+  --color-glass-bg: rgba(255, 255, 255, 0.08);
+  --color-glass-border: rgba(255, 255, 255, 0.4);
+  --color-glass-shadow: rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #E8625D;
+    --color-primary-dark: #DA3832;
+    --color-bg-primary: #111111;
+    --color-bg-secondary: #1C1C1C;
+    --color-text-primary: #F7F7F7;
+    --color-text-secondary: #CCCCCC;
+    --color-text-muted: #999999;
+    --color-button-primary: #F7F7F7;
+    --color-button-hover: #CECECE;
+    --color-link: #6FA8FF;
+    --color-link-hover: #9EC2FF;
+    --color-border: #333333;
+    --color-border-strong: #555555;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
