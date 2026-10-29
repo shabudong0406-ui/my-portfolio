@@ -10,6 +10,7 @@ import {
   MenuItem,
   Divider,
   Alert,
+  Box,
 } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
@@ -113,7 +114,7 @@ export default function ContactSection() {
   return (
     <Card id="contact" component="section" sx={{ bgcolor: 'var(--color-bg-primary)' }}>
       <CardContent sx={{ py: { xs: 5, md: 8 }, px: { xs: 2, md: 6 } }}>
-        <Stack spacing={4} alignItems="center" sx={{ maxWidth: 480, mx: 'auto' }}>
+        <Stack spacing={4} alignItems="center" sx={{ maxWidth: 860, mx: 'auto' }}>
           <Stack spacing={1} alignItems="center" textAlign="center">
             <Typography variant="h4" component="h2">
               Contact
@@ -125,213 +126,225 @@ export default function ContactSection() {
 
           <Divider flexItem sx={{ borderColor: 'var(--color-border)' }} />
 
-          <Stack spacing={1.5} sx={{ width: '100%' }}>
-            {contacts.map((c) => (
-              <Stack
-                key={c.label}
-                direction="row"
-                spacing={1.5}
-                alignItems="center"
-                component="a"
-                href={c.href}
-                sx={{
-                  color: 'var(--color-text-primary)',
-                  textDecoration: 'none',
-                  justifyContent: { xs: 'center', sm: 'flex-start' },
-                  '&:hover': { color: 'var(--color-text-secondary)' },
-                }}
-              >
-                {c.icon}
-                <Typography>{c.label}</Typography>
-              </Stack>
-            ))}
-          </Stack>
-
-          <Stack direction="row" spacing={1.5} justifyContent="center">
-            {socials.map((s) => (
-              <IconButton
-                key={s.label}
-                aria-label={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  width: 48,
-                  height: 48,
-                  border: '1px solid var(--color-border-strong)',
-                  color: 'var(--color-text-primary)',
-                  '&:hover': {
-                    bgcolor: 'var(--color-button-primary)',
-                    color: 'var(--color-bg-primary)',
-                  },
-                }}
-              >
-                {s.icon}
-              </IconButton>
-            ))}
-          </Stack>
-
-          <Divider flexItem sx={{ borderColor: 'var(--color-border)' }} />
-
-          <Typography variant="h6" component="h3">
-            방명록 남기기
-          </Typography>
-
-          <Stack component="form" spacing={3} sx={{ width: '100%' }} onSubmit={handleSubmit}>
-            <Stack spacing={2}>
-              <GroupTitle hint={`이름과 메시지는 ${PRIVATE}`}>기본 정보</GroupTitle>
-              <TextField {...fieldProps} label="이름" value={form.name} onChange={set('name')} required />
-              <TextField
-                {...fieldProps}
-                label="메시지"
-                value={form.message}
-                onChange={set('message')}
-                multiline
-                minRows={4}
-                required
-              />
-            </Stack>
-
-            <Stack spacing={2}>
-              <GroupTitle hint={`선택 사항 · 모두 ${PRIVATE}`}>연락처</GroupTitle>
-              <TextField {...fieldProps} label="이메일" type="email" value={form.email} onChange={set('email')} />
-              <TextField {...fieldProps} label="전화번호" type="tel" value={form.phone} onChange={set('phone')} />
-              <TextField
-                {...fieldProps}
-                label="SNS 계정 (인스타, 트위터 등)"
-                value={form.sns}
-                onChange={set('sns')}
-              />
-            </Stack>
-
-            <Stack spacing={2}>
-              <GroupTitle hint="선택 사항 · 지역, 나이대, 알게 된 경로는 최근 방문자 목록에 공개됩니다">
-                추가 정보
-              </GroupTitle>
-              <TextField {...fieldProps} select label="거주 지역" value={form.region} onChange={set('region')}>
-                <MenuItem value="">선택 안 함</MenuItem>
-                {REGIONS.map((r) => (
-                  <MenuItem key={r} value={r}>
-                    {r}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField {...fieldProps} select label="나이대" value={form.age_group} onChange={set('age_group')}>
-                <MenuItem value="">선택 안 함</MenuItem>
-                {AGE_GROUPS.map((a) => (
-                  <MenuItem key={a} value={a}>
-                    {a}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                {...fieldProps}
-                select
-                label="어떻게 알게 되었나요?"
-                value={form.referral}
-                onChange={set('referral')}
-              >
-                <MenuItem value="">선택 안 함</MenuItem>
-                {REFERRALS.map((r) => (
-                  <MenuItem key={r} value={r}>
-                    {r}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Stack>
-
-            <Stack spacing={2}>
-              <GroupTitle hint="선택 사항 · 창업 시기는 공개, 창업 금액과 이유는 비공개로 저장됩니다">
-                창업 이야기
-              </GroupTitle>
-              <TextField
-                {...fieldProps}
-                label="창업 시기 (직접 입력)"
-                placeholder="예: 2026년 3월 / 준비 중"
-                value={form.startup_date}
-                onChange={set('startup_date')}
-                inputProps={{ maxLength: 50 }}
-              />
-              <TextField
-                {...fieldProps}
-                label="창업 금액 (원)"
-                type="number"
-                value={form.startup_amount}
-                onChange={set('startup_amount')}
-                inputProps={{ min: 0 }}
-              />
-              <TextField
-                {...fieldProps}
-                label="창업을 하는 이유"
-                value={form.startup_reason}
-                onChange={set('startup_reason')}
-                multiline
-                minRows={3}
-              />
-            </Stack>
-
-            {/* 스팸 봇 방지용 숨김 필드 */}
-            <input
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-              style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, opacity: 0 }}
-              aria-hidden="true"
-            />
-
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              disabled={status === 'sending' || !isConfigured}
-            >
-              {status === 'sending' ? '남기는 중...' : '방명록 남기기'}
-            </Button>
-            {!isConfigured && <Alert severity="warning">방명록 서버 설정이 아직 연결되지 않았습니다.</Alert>}
-            {status === 'sent' && <Alert severity="success">방명록이 등록되었습니다. 감사합니다!</Alert>}
-            {status === 'error' && <Alert severity="error">등록에 실패했습니다. 잠시 후 다시 시도해주세요.</Alert>}
-          </Stack>
-
-          <Divider flexItem sx={{ borderColor: 'var(--color-border)' }} />
-
-          <Stack spacing={1.5} sx={{ width: '100%' }}>
-            <Typography variant="h6" component="h3" textAlign="center">
-              최근 방문자
-            </Typography>
-            {listError && <Alert severity="error">목록을 불러오지 못했습니다.</Alert>}
-            {!listError && isConfigured && entries.length === 0 && (
-              <Typography textAlign="center" sx={{ color: 'var(--color-text-muted)' }}>
-                아직 방명록이 없습니다. 첫 번째 방문자가 되어주세요.
-              </Typography>
-            )}
-            {entries.map((en) => {
-              const info = [en.region, en.age_group, en.referral && `${en.referral}로 알게 됨`, en.startup_date && `창업 ${en.startup_date}`]
-                .filter(Boolean)
-                .join(' · ');
-              return (
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gap: { xs: 4, md: 6 },
+              width: '100%',
+              alignItems: 'start',
+            }}
+          >
+            <Stack spacing={4}>
+            <Stack spacing={1.5} sx={{ width: '100%' }}>
+              {contacts.map((c) => (
                 <Stack
-                  key={en.id}
-                  spacing={0.25}
-                  sx={{ p: 1.5, border: '1px solid var(--color-border)', borderRadius: 2 }}
+                  key={c.label}
+                  direction="row"
+                  spacing={1.5}
+                  alignItems="center"
+                  component="a"
+                  href={c.href}
+                  sx={{
+                    color: 'var(--color-text-primary)',
+                    textDecoration: 'none',
+                    justifyContent: { xs: 'center', md: 'flex-start' },
+                    '&:hover': { color: 'var(--color-text-secondary)' },
+                  }}
                 >
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    방문자 #{en.id}
-                  </Typography>
-                  {info && (
-                    <Typography variant="body2" sx={{ color: 'var(--color-text-secondary)' }}>
-                      {info}
-                    </Typography>
-                  )}
-                  <Typography variant="caption" sx={{ color: 'var(--color-text-muted)' }}>
-                    {formatDate(en.created_at)}
-                  </Typography>
+                  {c.icon}
+                  <Typography>{c.label}</Typography>
                 </Stack>
-              );
-            })}
-          </Stack>
+              ))}
+            </Stack>
+
+            <Stack direction="row" spacing={1.5} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+              {socials.map((s) => (
+                <IconButton
+                  key={s.label}
+                  aria-label={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    border: '1px solid var(--color-border-strong)',
+                    color: 'var(--color-text-primary)',
+                    '&:hover': {
+                      bgcolor: 'var(--color-button-primary)',
+                      color: 'var(--color-bg-primary)',
+                    },
+                  }}
+                >
+                  {s.icon}
+                </IconButton>
+              ))}
+            </Stack>
+
+            <Divider flexItem sx={{ borderColor: 'var(--color-border)' }} />
+
+            <Stack spacing={1.5} sx={{ width: '100%' }}>
+              <Typography variant="h6" component="h3">
+                최근 방문자
+              </Typography>
+              {listError && <Alert severity="error">목록을 불러오지 못했습니다.</Alert>}
+              {!listError && isConfigured && entries.length === 0 && (
+                <Typography textAlign="center" sx={{ color: 'var(--color-text-muted)' }}>
+                  아직 방명록이 없습니다. 첫 번째 방문자가 되어주세요.
+                </Typography>
+              )}
+              {entries.map((en) => {
+                const info = [en.region, en.age_group, en.referral && `${en.referral}로 알게 됨`, en.startup_date && `창업 ${en.startup_date}`]
+                  .filter(Boolean)
+                  .join(' · ');
+                return (
+                  <Stack
+                    key={en.id}
+                    spacing={0.25}
+                    sx={{ p: 1.5, border: '1px solid var(--color-border)', borderRadius: 2 }}
+                  >
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      방문자 #{en.id}
+                    </Typography>
+                    {info && (
+                      <Typography variant="body2" sx={{ color: 'var(--color-text-secondary)' }}>
+                        {info}
+                      </Typography>
+                    )}
+                    <Typography variant="caption" sx={{ color: 'var(--color-text-muted)' }}>
+                      {formatDate(en.created_at)}
+                    </Typography>
+                  </Stack>
+                );
+              })}
+            </Stack>
+            </Stack>
+            <Stack spacing={3}>
+            <Typography variant="h6" component="h3">
+              방명록 남기기
+            </Typography>
+
+            <Stack component="form" spacing={3} sx={{ width: '100%' }} onSubmit={handleSubmit}>
+              <Stack spacing={2}>
+                <GroupTitle hint={`이름과 메시지는 ${PRIVATE}`}>기본 정보</GroupTitle>
+                <TextField {...fieldProps} label="이름" value={form.name} onChange={set('name')} required />
+                <TextField
+                  {...fieldProps}
+                  label="메시지"
+                  value={form.message}
+                  onChange={set('message')}
+                  multiline
+                  minRows={4}
+                  required
+                />
+              </Stack>
+
+              <Stack spacing={2}>
+                <GroupTitle hint={`선택 사항 · 모두 ${PRIVATE}`}>연락처</GroupTitle>
+                <TextField {...fieldProps} label="이메일" type="email" value={form.email} onChange={set('email')} />
+                <TextField {...fieldProps} label="전화번호" type="tel" value={form.phone} onChange={set('phone')} />
+                <TextField
+                  {...fieldProps}
+                  label="SNS 계정 (인스타, 트위터 등)"
+                  value={form.sns}
+                  onChange={set('sns')}
+                />
+              </Stack>
+
+              <Stack spacing={2}>
+                <GroupTitle hint="선택 사항 · 지역, 나이대, 알게 된 경로는 최근 방문자 목록에 공개됩니다">
+                  추가 정보
+                </GroupTitle>
+                <TextField {...fieldProps} select label="거주 지역" value={form.region} onChange={set('region')}>
+                  <MenuItem value="">선택 안 함</MenuItem>
+                  {REGIONS.map((r) => (
+                    <MenuItem key={r} value={r}>
+                      {r}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField {...fieldProps} select label="나이대" value={form.age_group} onChange={set('age_group')}>
+                  <MenuItem value="">선택 안 함</MenuItem>
+                  {AGE_GROUPS.map((a) => (
+                    <MenuItem key={a} value={a}>
+                      {a}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  {...fieldProps}
+                  select
+                  label="어떻게 알게 되었나요?"
+                  value={form.referral}
+                  onChange={set('referral')}
+                >
+                  <MenuItem value="">선택 안 함</MenuItem>
+                  {REFERRALS.map((r) => (
+                    <MenuItem key={r} value={r}>
+                      {r}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+
+              <Stack spacing={2}>
+                <GroupTitle hint="선택 사항 · 창업 시기는 공개, 창업 금액과 이유는 비공개로 저장됩니다">
+                  창업 이야기
+                </GroupTitle>
+                <TextField
+                  {...fieldProps}
+                  label="창업 시기 (직접 입력)"
+                  placeholder="예: 2026년 3월 / 준비 중"
+                  value={form.startup_date}
+                  onChange={set('startup_date')}
+                  inputProps={{ maxLength: 50 }}
+                />
+                <TextField
+                  {...fieldProps}
+                  label="창업 금액 (원)"
+                  type="number"
+                  value={form.startup_amount}
+                  onChange={set('startup_amount')}
+                  inputProps={{ min: 0 }}
+                />
+                <TextField
+                  {...fieldProps}
+                  label="창업을 하는 이유"
+                  value={form.startup_reason}
+                  onChange={set('startup_reason')}
+                  multiline
+                  minRows={3}
+                />
+              </Stack>
+
+              {/* 스팸 봇 방지용 숨김 필드 */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, opacity: 0 }}
+                aria-hidden="true"
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={status === 'sending' || !isConfigured}
+              >
+                {status === 'sending' ? '남기는 중...' : '방명록 남기기'}
+              </Button>
+              {!isConfigured && <Alert severity="warning">방명록 서버 설정이 아직 연결되지 않았습니다.</Alert>}
+              {status === 'sent' && <Alert severity="success">방명록이 등록되었습니다. 감사합니다!</Alert>}
+              {status === 'error' && <Alert severity="error">등록에 실패했습니다. 잠시 후 다시 시도해주세요.</Alert>}
+            </Stack>
+
+            </Stack>
+          </Box>
         </Stack>
       </CardContent>
     </Card>
